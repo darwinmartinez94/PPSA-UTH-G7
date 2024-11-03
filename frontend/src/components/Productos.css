@@ -1,0 +1,210 @@
+/* Contenedor principal */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Título */
+h2 {
+  color: #333;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* Contenedor del formulario */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Campos de entrada */
+input {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  border-color: #28a745;
+}
+
+/* Estilo para los select (categoría y proveedor) */
+select {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+select:focus {
+  border-color: #28a745;
+}
+
+/* Botones generales */
+button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:hover {
+  filter: brightness(0.9);
+}
+
+/* Botón principal */
+button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+}
+
+button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+/* Botón de agregar producto */
+button[type="button"] {
+  background-color: #007bff;
+  color: white;
+}
+
+button[type="button"]:hover {
+  background-color: #0069d9;
+}
+
+/* Tabla de productos */
+.productos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.productos-tabla th, .productos-tabla td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.productos-tabla th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+}
+
+.productos-tabla tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.productos-tabla tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.btn-editar,
+.btn-eliminar {
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Botón de Editar */
+.btn-editar {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.btn-editar:hover {
+  background-color: #e0a800;
+}
+
+/* Botón de Eliminar */
+.btn-eliminar {
+  background-color: #dc3545;
+}
+
+.btn-eliminar:hover {
+  background-color: #c82333;
+}
+/* Estilo para los labels */
+label {
+  display: flex;
+  align-items: center; 
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Estilo para el input dentro de los labels */
+label input[type="checkbox"] {
+  margin-right: 8px; 
+}
+
+/* Estilo para el input de fecha */
+label input[type="date"] {
+  padding: 8px; 
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s;
+  margin-left: 10px; 
+}
+
+label input[type="date"]:focus {
+  border-color: #28a745; 
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .form-container, .productos-tabla {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  input, select, button {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+}

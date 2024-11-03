@@ -1,0 +1,35 @@
+.resumen-container {
+  padding: 20px;
+}
+
+.resumen-cards {
+  display: flex;
+  flex-wrap: wrap; 
+  justify-content: center;
+}
+
+.card {
+  background-color: #3b82f6; 
+  border: 2px solid #2563eb; 
+  border-radius: 10px; 
+  padding: 20px;
+  text-align: center;
+  width: calc(25.33% - 50px); 
+  margin: 30px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s; 
+}
+
+.card:hover {
+  transform: translateY(-10px); 
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  color: #f0f4f8; 
+}
+
+.card p {
+  font-size: 2rem;
+  color: #ffffff; 
+}
