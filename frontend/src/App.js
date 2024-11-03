@@ -11,6 +11,9 @@ import Categorias from './components/Categorias';
 import Proveedores from './components/Proveedores';
 import Usuarios from './components/Usuarios';
 import Error404 from './components/Error404';
+import SupervisorProductos from './components/SupervisorProductos'
+import SupervisorCategorias from './components/SupervisorCategorias'
+import SupervisorProveedor from './components/SupervisorProveedor'
 
 function App() {
   const { userRole } = useContext(AuthContext);
@@ -38,7 +41,11 @@ function App() {
 
         {userRole === 'Supervisor' && (
           <Route path="/supervisor" element = {<SupervisorDashboard />}>
+            <Route index element={<Navigate to="dashboard"/>} />
             <Route path="dashboard" element={<Resumen/>} />
+            <Route path="productos" element={<SupervisorProductos />} />
+            <Route path="categorias" element={<SupervisorCategorias />} />
+            <Route path="proveedores" element={<SupervisorProveedor />} />
 
           </Route>
          
