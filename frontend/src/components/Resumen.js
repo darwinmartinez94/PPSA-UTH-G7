@@ -7,6 +7,7 @@ function Resumen() {
   const [categoriasCount, setCategoriasCount] = useState(0);
   const [proveedoresCount, setProveedoresCount] = useState(0);
   const [usuariosCount, setUsuariosCount] = useState(0);
+  const [transaccionesCount, setTransaccionesCount] = useState(0);
 
   useEffect(() => {
     // Obtener conteo de productos
@@ -28,7 +29,13 @@ function Resumen() {
     axios.get('http://localhost:5000/api/usuarios/count')
       .then(response => setUsuariosCount(response.data.total_usuarios))
       .catch(error => console.error("Error al obtener el conteo de usuarios:", error));  
-  }, []);
+    
+    //Obtener el conteo de las transacciones
+    axios.get('http://localhost:5000/api/transacciones/count')
+      .then(response => setTransaccionesCount(response.data.total_transacciones))
+      .catch(error => console.error("Error al obtener el conteo de las transacciones", error))
+  
+    }, []);
 
   return (
     <div className="resumen-container">
@@ -52,7 +59,7 @@ function Resumen() {
         </div>
         <div className="card">
           <h3>Transacciones</h3>
-          <p>{usuariosCount}</p>
+          <p>{transaccionesCount}</p>
         </div>
       </div>
     </div>

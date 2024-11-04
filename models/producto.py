@@ -51,3 +51,10 @@ class Producto:
             else:
                 return f"El stock del producto '{producto['nombre']}' está dentro del rango permitido."
         return "Producto no encontrado."
+
+    #actualizarl el stock al hacer una transaccion
+    def actualizar_stock(self, producto_id, nuevo_stock):
+        self.collection.update_one(
+            {"_id": ObjectId(producto_id)},
+            {"$set": {"cantidad_stock": nuevo_stock}}
+        )

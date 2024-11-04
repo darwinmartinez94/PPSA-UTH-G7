@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Categoria.css';  // Archivo de estilos
-
+import './Categoria.css';  
 function Categoria() {
   const [categorias, setCategorias] = useState([]);
   const [nombre, setNombre] = useState('');

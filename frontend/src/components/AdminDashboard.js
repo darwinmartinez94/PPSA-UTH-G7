@@ -13,6 +13,8 @@ function AdminDashboard() {
           <li><Link to="/admin/categorias">Categorías</Link></li>
           <li><Link to="/admin/proveedores">Proveedores</Link></li>
           <li><Link to="/admin/usuarios">Usuarios</Link></li>
+          <li><Link to="/admin/transacciones">Transacciones</Link></li>
+          <li><Link to="/admin/reportes">Reportes</Link></li>
         </ul>
       </nav>
 

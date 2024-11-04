@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Proveedores.css';  // Archivo de estilos
+import './Proveedores.css';  
 
 function Proveedores() {
   const [proveedores, setProveedores] = useState([]);

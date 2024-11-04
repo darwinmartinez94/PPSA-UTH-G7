@@ -14,6 +14,7 @@ import Error404 from './components/Error404';
 import SupervisorProductos from './components/SupervisorProductos'
 import SupervisorCategorias from './components/SupervisorCategorias'
 import SupervisorProveedor from './components/SupervisorProveedor'
+import Transacciones from './components/Transacciones';
 
 function App() {
   const { userRole } = useContext(AuthContext);
@@ -33,6 +34,7 @@ function App() {
             <Route path="categorias" element={<Categorias />} />
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="usuarios" element={<Usuarios />} />
+            <Route path="transacciones" element={<Transacciones />}/>
 
           </Route>
         )}

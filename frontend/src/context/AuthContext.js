@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
     const decoded = jwtDecode(token);
     setUserRole(decoded.rol);  // Extrae el rol del token
     setUserName(decoded.nombre); //Extrae el nombre 
-    console.log("User Role:", decoded.rol); // Debugging
-    console.log("User Name:", decoded.nombre); // Debugging
+    //console.log("User Role:", decoded.rol); // Debugging
+    //console.log("User Name:", decoded.nombre); // Debugging
   };
 
   //funcion para salir y restablecer los valores
