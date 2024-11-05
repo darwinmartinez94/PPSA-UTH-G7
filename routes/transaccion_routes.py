@@ -6,43 +6,43 @@ transaccion_bp = Blueprint('transaccion', __name__)
 
 @transaccion_bp.route('/transacciones', methods=['POST'])
 def crear_transaccion():
-        from app import db
-        data = request.json
-        # Obtener el nombre del usuario logueado desde el contexto
-        usuario = data.get('usuario')
+    from app import db
+    data = request.json
+    # Obtener el nombre del usuario logueado desde el contexto
+    usuario = data.get('usuario')
 
-        # Verificar que el producto exista
-        producto_id = data.get('producto')
-        if not producto_id:
-            return jsonify({"error": "El campo producto es requerido"}), 422
+    # Verificar que el producto exista
+    producto_id = data.get('producto')
+    if not producto_id:
+        return jsonify({"error": "El campo producto es requerido"}), 422
 
-        producto = Producto(db).obtener_producto_por_id(producto_id)
-        if not producto:
-            return jsonify({"error": "Producto no encontrado"}), 404
+    producto = Producto(db).obtener_producto_por_id(producto_id)
+    if not producto:
+        return jsonify({"error": "Producto no encontrado"}), 404
 
-        # pasar id y nombre del producto
-        producto_info = {
-            "id": str(producto["_id"]),
-            "nombre": producto["nombre"]
-        }
+    # pasar id y nombre del producto
+    producto_info = {
+        "id": str(producto["_id"]),
+        "nombre": producto["nombre"]
+    }
 
-        # Calcular el nuevo stock
-        tipo_transaccion = data.get('tipo_transaccion')
-        cantidad = int(data.get('cantidad', 0))
-        if tipo_transaccion == "salida" and producto['cantidad_stock'] < cantidad:
-            return jsonify({"error": "Stock insuficiente"}), 400
+    # Calcular el nuevo stock
+    tipo_transaccion = data.get('tipo_transaccion')
+    cantidad = int(data.get('cantidad', 0))
+    if tipo_transaccion == "salida" and producto['cantidad_stock'] < cantidad:
+        return jsonify({"error": "Stock insuficiente"}), 400
 
-        nuevo_stock = (
-            producto['cantidad_stock'] + cantidad if tipo_transaccion == "entrada"
-            else producto['cantidad_stock'] - cantidad
-        )
+    nuevo_stock = (
+        producto['cantidad_stock'] + cantidad if tipo_transaccion == "entrada"
+        else producto['cantidad_stock'] - cantidad
+    )
 
-        # Crear la transacción y actualizar el stock del producto
-        transaccion = Transaccion(db)
-        transaccion.crear_transaccion(tipo_transaccion, producto_info, cantidad, usuario)
-        Producto(db).actualizar_stock(producto_id, nuevo_stock)
+    # Crear la transacción y actualizar el stock del producto
+    transaccion = Transaccion(db)
+    transaccion.crear_transaccion(tipo_transaccion, producto_info, cantidad, usuario)
+    Producto(db).actualizar_stock(producto_id, nuevo_stock)
 
-        return jsonify({"mensaje": "Transacción registrada y stock actualizado"}), 201
+    return jsonify({"mensaje": "Transacción registrada y stock actualizado"}), 201
 
 # Serializar la transacción para el frontend
 def serializar_transaccion(transaccion):
