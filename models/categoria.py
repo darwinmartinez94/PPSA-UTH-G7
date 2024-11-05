@@ -1,7 +1,7 @@
 class Categoria:
     def __init__(self, db):
         self.db = db
-        self.collection = self.db['categorias']  # Colección de categorías en MongoDB
+        self.collection = self.db['categorias'] 
 
     def crear_categoria(self, nombre, descripcion):
         nueva_categoria = {

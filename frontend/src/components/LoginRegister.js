@@ -24,7 +24,7 @@ function LoginRegister() {
       }
       await axios.post('http://localhost:5000/api/usuarios', user);
       alert("Usuario registrado con éxito");
-      setIsLoginActive(true); // Regresa al formulario de inicio de sesión
+      setIsLoginActive(true); 
     } catch (error) {
       setError(error.response?.data?.error || 'Error al registrar');
     }

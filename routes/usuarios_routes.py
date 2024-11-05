@@ -6,7 +6,6 @@ from models.usuarios import Usuario
 usuario_bp = Blueprint('usuario', __name__)
 SECRET_KEY = ''
 
-# Función auxiliar para serializar los datos del usuario
 def serializar_usuario(usuario):
     usuario['_id'] = str(usuario['_id'])
     return usuario
@@ -17,7 +16,6 @@ def crear_usuario():
     from app import db
     data = request.json
     usuario = Usuario(db)
-
     resultado = usuario.crear_usuario(
         data['nombre'],
         data['correo'],
@@ -40,7 +38,7 @@ def login_usuario():
         rol = usuario_data.get("rol")  # Obtener el rol del usuario
         nombre = usuario_data.get("nombre") #Obtener el nombre del usuario
 
-        # Generar un token de autenticación con el rol incluido
+        # Generar un token de autenticación 
         payload = {
             "correo": data['correo'],
             "nombre": nombre,
@@ -65,7 +63,7 @@ def obtener_usuarios():
 
 #obtener usuario por id
 
-# Actualizar un usuario por ID
+# Actualizar un usuario
 @usuario_bp.route('/usuarios/<usuario_id>', methods=['PUT'])
 def actualizar_usuario(usuario_id):
     from app import db
@@ -86,7 +84,7 @@ def actualizar_usuario(usuario_id):
 
     return jsonify({"mensaje": "Usuario actualizado", "resultado": resultado.modified_count}), 200
 
-# Eliminar un usuario por ID
+# Eliminar un usuario 
 @usuario_bp.route('/usuarios/<usuario_id>', methods=['DELETE'])
 def eliminar_usuario(usuario_id):
     from app import db

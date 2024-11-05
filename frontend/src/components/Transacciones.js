@@ -35,11 +35,7 @@ function Transacciones(){
             usuario: userName  
         };
 
-        axios.post('http://localhost:5000/api/transacciones', nuevaTransaccion, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
+        axios.post('http://localhost:5000/api/transacciones', nuevaTransaccion)
         .then(() => {
             setTipo_Transaccion('');
             setProducto('');
@@ -110,3 +106,4 @@ function Transacciones(){
 }
 
 export default Transacciones;
+

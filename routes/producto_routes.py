@@ -6,7 +6,7 @@ producto_bp = Blueprint('producto', __name__)
 
 # Función auxiliar para serializar el producto con ObjectId
 def serializar_producto(producto):
-    producto['_id'] = str(producto['_id'])  # Convertir ObjectId a cadena
+    producto['_id'] = str(producto['_id'])  
     return producto
 
 # Crear un nuevo producto
@@ -27,8 +27,8 @@ def crear_producto():
         data['cantidad_stock'],
         data['precio_unitario'],
         data['proveedor'],
+        data['actualizado_por'],
         data['disponible'],
-        data['creado_por'],
         caducidad, 
         stock_min,
         stock_max
@@ -56,7 +56,7 @@ def obtener_producto_por_id(producto_id):
         return jsonify(serializar_producto(producto_encontrado)), 200
     return jsonify({"error": "Producto no encontrado"}), 404
 
-# Actualizar un producto por ID
+# Actualizar un producto 
 @producto_bp.route('/productos/<producto_id>', methods=['PUT'])
 def actualizar_producto(producto_id):
     from app import db
@@ -71,7 +71,7 @@ def actualizar_producto(producto_id):
         "precio_unitario": data.get('precio_unitario'),
         "proveedor": data.get('proveedor'),
         "disponible": data.get('disponible'),
-        "actualizado_por": data.get('creado_por'),
+        "actualizado_por": data.get('actualizado_por'),
         "caducidad": data.get('caducidad'),
         "stock_min": data.get('stock_min'),
         "stock_max": data.get('stock_max')
@@ -81,7 +81,7 @@ def actualizar_producto(producto_id):
     
     return jsonify({"mensaje": "Producto actualizado", "resultado": resultado.modified_count}), 200
 
-# Eliminar un producto por ID
+# Eliminar un producto
 @producto_bp.route('/productos/<producto_id>', methods=['DELETE'])
 def eliminar_producto(producto_id):
     from app import db
@@ -100,7 +100,6 @@ def verificar_stock(producto_id):
     producto = Producto(db)
 
     mensaje = producto.verificar_stock(producto_id)
-    
     return jsonify({"mensaje": mensaje}), 200
 
 # Obtener el conteo de productos

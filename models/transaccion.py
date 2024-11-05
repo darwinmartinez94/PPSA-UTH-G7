@@ -1,5 +1,4 @@
 from datetime import datetime
-from bson import ObjectId
 
 class Transaccion:
     def __init__(self, db):
@@ -21,4 +20,5 @@ class Transaccion:
     
     def contar_transacciones(self):
         return self.collection.count_documents({})
+
     

@@ -1,7 +1,7 @@
 class Proveedor:
     def __init__(self, db):
         self.db = db
-        self.collection = self.db['proveedores']  # Colección de proveedores en MongoDB
+        self.collection = self.db['proveedores']  
 
     def crear_proveedor(self, nombre, direccion, telefono, email):
         nuevo_proveedor = {

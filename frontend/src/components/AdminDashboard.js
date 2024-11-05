@@ -19,7 +19,6 @@ function AdminDashboard() {
       </nav>
 
       <div className="main-content">
-        {/* Outlet muestra el contenido del componente según la ruta */}
         <Outlet />
       </div>
     </div>

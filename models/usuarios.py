@@ -5,7 +5,7 @@ import bcrypt
 class Usuario:
     def __init__(self, db):
         self.db = db
-        self.collection = self.db['usuarios']  # Colección de usuarios en MongoDB
+        self.collection = self.db['usuarios'] 
 
     def crear_usuario(self, nombre, correo, contrasenia, rol):
         # Encriptar la contraseña
@@ -13,7 +13,7 @@ class Usuario:
         nuevo_usuario = {
             "nombre": nombre,
             "correo": correo,
-            "contrasenia": contrasenia_encriptada,  # Guardar la contraseña encriptada
+            "contrasenia": contrasenia_encriptada,  
             "rol": rol,
             "fecha_creacion": datetime.now(),
         }

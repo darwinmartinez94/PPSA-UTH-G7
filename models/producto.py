@@ -4,7 +4,7 @@ from bson import ObjectId
 class Producto:
     def __init__(self, db):
         self.db = db
-        self.collection = self.db['productos']  # Colección de productos en MongoDB
+        self.collection = self.db['productos']
 
     def crear_producto(self, nombre, descripcion, categoria, cantidad, precio, proveedor, creado_por, disponible, caducidad=None, stock_min=0, stock_max=None):
         nuevo_producto = {
@@ -16,11 +16,11 @@ class Producto:
             "proveedor": proveedor,
             "fecha_ingreso": datetime.now(),
             "fecha_actualizacion": datetime.now(),
-            "actualizado_por": creado_por,
             "disponible": disponible,
             "caducidad": caducidad,  
             "stock_min": stock_min,  
-            "stock_max": stock_max,  
+            "stock_max": stock_max, 
+            "actualizado_por": creado_por,  
         }
         return self.collection.insert_one(nuevo_producto)
 
@@ -39,8 +39,7 @@ class Producto:
     def eliminar_producto(self, producto_id):
         return self.collection.delete_one({"_id": ObjectId(producto_id)})
 
- 
-
+    #verificar el stock de los productos
     def verificar_stock(self, producto_id):
         producto = self.collection.find_one({"_id": ObjectId(producto_id)})
         if producto:

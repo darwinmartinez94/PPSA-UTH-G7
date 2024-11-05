@@ -58,7 +58,7 @@ function Productos() {
     };
 
     try {
-      await axios.put(`http://localhost:5000/api/productos/${productoEditar._id}`, productoActualizado);
+      await axios.put('http://localhost:5000/api/productos/${productoEditar._id}', productoActualizado);
       setMensaje('Producto actualizado con éxito');
       setMostrarFormularioEditar(false);
 
@@ -68,9 +68,9 @@ function Productos() {
           tipo_movimiento: productoActualizado.cantidad_stock > stockAnterior ? 'entrada' : 'salida',
           cantidad: Math.abs(productoActualizado.cantidad_stock - stockAnterior),
           descripcion: 'Actualización de stock',
-          realizado_por: userName
+          actualizado_por: userName
         };
-        await axios.post(`http://localhost:5000/api/productos/${productoEditar._id}/movimiento`, movimiento);
+        await axios.post('http://localhost:5000/api/productos/${productoEditar._id}/movimiento', movimiento);
       }
 
       // Actualiza la lista de productos
@@ -86,7 +86,7 @@ function Productos() {
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/productos/${id}`);
+        await axios.delete('http://localhost:5000/api/productos/${id}');
         setProductos(productos.filter(producto => producto._id !== id));
         setMensaje('Producto eliminado con éxito');
       } catch (error) {
@@ -118,8 +118,8 @@ function Productos() {
       cantidad_stock: parseInt(e.target.cantidad_stock.value),
       precio_unitario: parseFloat(e.target.precio_unitario.value),
       proveedor: e.target.proveedor.value,
+      actualizado_por: userName,
       disponible: e.target.disponible.checked,
-      creado_por: userName,
       caducidad: e.target.caducidad.value ? new Date(e.target.caducidad.value).toISOString() : null,
       stock_min: parseInt(e.target.stock_min.value),
       stock_max: parseInt(e.target.stock_max.value)

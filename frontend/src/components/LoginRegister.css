@@ -64,7 +64,7 @@ body {
     color: #46A2FD;
 }
 
-/* Estilos para los formularios */
+
 .contenedorLoginRegister {
     display: flex;
     align-items: center;
@@ -113,7 +113,7 @@ body {
     outline: none;
 }
 
-/* Estilos de visibilidad para los formularios */
+
 .formularioLogin {
     display: block;
 }
@@ -122,12 +122,10 @@ body {
     display: none;
 }
 
-/* Clases adicionales para alternar visibilidad */
 .hidden {
     display: none;
 }
 
-/* Diseño Responsivo */
 @media screen and (max-width: 850px) {
     .cajaTrasera {
         margin-top: 50px;

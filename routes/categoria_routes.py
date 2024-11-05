@@ -1,12 +1,11 @@
-from flask import Blueprint, request, jsonify  # Agregar request aquí
+from flask import Blueprint, request, jsonify 
 from models.categoria import Categoria
-from bson import ObjectId  # Importar ObjectId para trabajar con los IDs de MongoDB
 
 categoria_bp = Blueprint('categoria', __name__)
 
 @categoria_bp.route('/categorias', methods=['POST'])
 def crear_categoria():
-    from app import db  # Importamos db localmente para evitar importación circular
+    from app import db  
     data = request.json
     categoria = Categoria(db)
     resultado = categoria.crear_categoria(
@@ -16,7 +15,7 @@ def crear_categoria():
     return jsonify(str(resultado.inserted_id)), 201
 
 def serializar_categoria(categoria):
-    categoria['_id'] = str(categoria['_id'])  # Convertir ObjectId a cadena
+    categoria['_id'] = str(categoria['_id']) 
     return categoria
 
 @categoria_bp.route('/categorias', methods=['GET'])
