@@ -4,7 +4,7 @@ from models.producto import Producto
 # Crear un blueprint para las rutas de productos
 producto_bp = Blueprint('producto', __name__)
 
-# Función auxiliar para serializar el producto con ObjectId
+# Función auxiliar para serializar el producto
 def serializar_producto(producto):
     producto['_id'] = str(producto['_id'])  
     return producto
@@ -98,7 +98,6 @@ def eliminar_producto(producto_id):
 def verificar_stock(producto_id):
     from app import db
     producto = Producto(db)
-
     mensaje = producto.verificar_stock(producto_id)
     return jsonify({"mensaje": mensaje}), 200
 

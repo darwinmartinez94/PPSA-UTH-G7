@@ -33,7 +33,7 @@ const handleSubmit = (e) => {
         rol
     };
     if (modoEdicion) {
-      axios.put('http://localhost:5000/api/usuarios/${usuarioEditando._id}', nuevoUsuario)
+      axios.put(`http://localhost:5000/api/usuarios/${usuarioEditando._id}`, nuevoUsuario)
           .then(() => {
               setModoEdicion(false);
               setUsuarioEditando(null);
@@ -62,7 +62,7 @@ const actualizarListaUsuarios = () => {
 
 // Eliminar un usuario
 const eliminarUsuario = (id) => {
-  axios.delete('http://localhost:5000/api/usuarios/${id}')
+  axios.delete(`http://localhost:5000/api/usuarios/${id}`)
       .then(() => actualizarListaUsuarios())
       .catch(error => setMensaje('Hubo un problema al eliminar el usuario.'));
 };

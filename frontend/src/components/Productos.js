@@ -58,7 +58,7 @@ function Productos() {
     };
 
     try {
-      await axios.put('http://localhost:5000/api/productos/${productoEditar._id}', productoActualizado);
+      await axios.put(`http://localhost:5000/api/productos/${productoEditar._id}`, productoActualizado);
       setMensaje('Producto actualizado con éxito');
       setMostrarFormularioEditar(false);
 
@@ -70,7 +70,7 @@ function Productos() {
           descripcion: 'Actualización de stock',
           actualizado_por: userName
         };
-        await axios.post('http://localhost:5000/api/productos/${productoEditar._id}/movimiento', movimiento);
+        await axios.post(`http://localhost:5000/api/productos/${productoEditar._id}/movimiento`, movimiento);
       }
 
       // Actualiza la lista de productos
@@ -83,16 +83,17 @@ function Productos() {
   };
 
   // Función para manejar la eliminación de productos
-  const handleDelete = async (id) => {
+ const handleDelete = (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-      try {
-        await axios.delete('http://localhost:5000/api/productos/${id}');
-        setProductos(productos.filter(producto => producto._id !== id));
-        setMensaje('Producto eliminado con éxito');
-      } catch (error) {
-        console.error("Hubo un error al eliminar el producto:", error);
-        setMensaje('Hubo un error al eliminar el producto');
-      }
+      axios.delete(`http://localhost:5000/api/productos/${id}`)
+        .then(() => {
+          setProductos(productos.filter(producto => producto._id !== id));
+          setMensaje('Producto eliminado con éxito');
+        })
+        .catch(error => {
+          console.error("Hubo un error al eliminar el producto:", error);
+          setMensaje('Hubo un error al eliminar el producto');
+        });
     }
   };
 

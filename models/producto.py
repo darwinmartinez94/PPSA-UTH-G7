@@ -44,12 +44,12 @@ class Producto:
         producto = self.collection.find_one({"_id": ObjectId(producto_id)})
         if producto:
             if producto['cantidad_stock'] < producto['stock_min']:
-                return f"El producto '{producto['nombre']}' está por debajo del stock mínimo."
+                return f"El producto '{producto['nombre']}' esta por debajo del stock minimo"
             elif producto['stock_max'] and producto['cantidad_stock'] > producto['stock_max']:
-                return f"El producto '{producto['nombre']}' excede el stock máximo."
+                return f"El producto '{producto['nombre']}' excede el stock maximo"
             else:
-                return f"El stock del producto '{producto['nombre']}' está dentro del rango permitido."
-        return "Producto no encontrado."
+                return f"El stock del producto '{producto['nombre']}' esta dentro del rango permitido"
+        return "Producto no encontrado"
 
     #actualizarl el stock al hacer una transaccion
     def actualizar_stock(self, producto_id, nuevo_stock):

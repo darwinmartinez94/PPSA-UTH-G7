@@ -49,7 +49,12 @@ function Transacciones(){
         })
         .catch(error => {
             console.error("Error al agregar la transacción", error);
+            if(error.response && error.response.data){
+                setMensaje(error.response.data.error);
+            }
+            else{    
             setMensaje('Hubo un error al agregar la transacción');
+            }
         });
     };
 

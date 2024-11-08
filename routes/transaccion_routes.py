@@ -29,13 +29,19 @@ def crear_transaccion():
     # Calcular el nuevo stock
     tipo_transaccion = data.get('tipo_transaccion')
     cantidad = int(data.get('cantidad', 0))
-    if tipo_transaccion == "salida" and producto['cantidad_stock'] < cantidad:
-        return jsonify({"error": "Stock insuficiente"}), 400
-
     nuevo_stock = (
-        producto['cantidad_stock'] + cantidad if tipo_transaccion == "entrada"
+        producto['cantidad_stock'] + cantidad
+        if tipo_transaccion == "entrada"
         else producto['cantidad_stock'] - cantidad
     )
+
+    #verificar que el stock no sea > que el maximo ni < que el minimo
+    if tipo_transaccion == "entrada" and producto['stock_max'] and nuevo_stock > producto['stock_max']:
+        return jsonify({"error": f"Stock actual: {producto['cantidad_stock']}. El stock Maximo es: {producto['stock_max']} ¡No lo puede exceder!"}), 400
+    if tipo_transaccion == "salida" and nuevo_stock < producto['stock_min']:
+        return jsonify({"error": f"Stock actual: {producto['cantidad_stock']}. El stock Minimo es: {producto['stock_min']} ¡No lo puede bajar!"}),400
+    if tipo_transaccion == "salida" and producto['cantidad_stock'] < cantidad:
+        return jsonify({"error": "Stock insuficiente"}), 400
 
     # Crear la transacción y actualizar el stock del producto
     transaccion = Transaccion(db)
@@ -44,12 +50,13 @@ def crear_transaccion():
 
     return jsonify({"mensaje": "Transacción registrada y stock actualizado"}), 201
 
-# Serializar la transacción para el frontend
-def serializar_transaccion(transaccion):
-    transaccion['_id'] = str(transaccion['_id'])
-    if 'producto' in transaccion and isinstance(transaccion['producto'], dict):
+# Serializar la transacción
+def serializar_transaccion(transaccion): 
+    transaccion['_id'] = str(transaccion['_id']) 
+    if 'producto' in transaccion and isinstance(transaccion['producto'], dict): 
         transaccion['producto']['id'] = str(transaccion['producto']['id'])
     return transaccion
+ 
 
 # Ruta para obtener la lista de transacciones
 @transaccion_bp.route('/transacciones', methods=['GET'])

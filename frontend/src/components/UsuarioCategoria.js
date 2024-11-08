@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Categoria.css';  
-function Categoria() {
+
+function UsuarioCategoria() {
   const [categorias, setCategorias] = useState([]);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -78,7 +79,6 @@ function Categoria() {
           <tr>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -86,7 +86,6 @@ function Categoria() {
             <tr key={categoria._id}>
               <td>{categoria.nombre}</td>
               <td>{categoria.descripcion}</td>
-              <td></td>
             </tr>
           ))}
         </tbody>
@@ -95,4 +94,4 @@ function Categoria() {
   );
 }
 
-export default Categoria;
+export default UsuarioCategoria;

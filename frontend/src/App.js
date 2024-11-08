@@ -4,7 +4,7 @@ import { AuthContext } from './context/AuthContext';
 import LoginRegister from './components/LoginRegister';
 import AdminDashboard from './components/AdminDashboard';
 import SupervisorDashboard from './components/SupervisorDashboard';
-import UserDashboard from './components/UserDashboard';
+import UserioDashboard from './components/UsuarioDashboard';
 import Resumen from './components/Resumen';
 import Productos from './components/Productos';
 import Categorias from './components/Categorias';
@@ -14,6 +14,8 @@ import Error404 from './components/Error404';
 import SupervisorProductos from './components/SupervisorProductos'
 import SupervisorCategorias from './components/SupervisorCategorias'
 import SupervisorProveedor from './components/SupervisorProveedor'
+import Usuariocategoria from './components/UsuarioCategoria'
+import UsuarioProductos from './components/UsuarioProductos'
 import Transacciones from './components/Transacciones';
 
 function App() {
@@ -55,8 +57,12 @@ function App() {
         
         
         {userRole === 'Usuario' && (
-        <Route path="/usuario" element={<UserDashboard />} />
-        
+        <Route path="/usuario" element={<UserioDashboard />} >
+          <Route index element={<Navigate to="dashboard"/>} />
+            <Route path="dashboard" element={<Resumen/>} />
+            <Route path="productos" element={<UsuarioProductos />} />
+            <Route path="categorias" element={<Usuariocategoria />} />
+        </Route>
         
         )}
         
