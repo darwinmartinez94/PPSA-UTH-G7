@@ -1,3 +1,6 @@
+from bson import ObjectId
+
+
 class Proveedor:
     def __init__(self, db):
         self.db = db
@@ -19,4 +22,10 @@ class Proveedor:
     def contar_proveedores(self):
         return self.collection.count_documents({})
     
+    def actualizar_proveedor(self, proveedor_id, actualizaciones):
+        actualizaciones
+        return self.collection.update_one({"_id": ObjectId(proveedor_id)}, {"$set": actualizaciones})
     
+    def eliminar_proveedor(self, proveedor_id):
+        return self.collection.delete_one({"_id": ObjectId(proveedor_id)})
+

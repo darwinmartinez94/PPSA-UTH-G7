@@ -34,3 +34,31 @@ def contar_proveedores():
     from app import db
     count = db['proveedores'].count_documents({})
     return jsonify({"total_proveedores": count}), 200
+
+# Actualizar un proveedor 
+@proveedor_bp.route('/proveedores/<proveedor_id>', methods=['PUT'])
+def actualizar_proveedor(proveedor_id):
+    from app import db
+    data = request.json
+    proveedor = Proveedor(db)
+    
+    actualizaciones = {
+        "nombre": data.get('nombre'),
+        "direccion": data.get('direccion'),
+        "telefono": data.get('telefono'),
+        "email": data.get('email')
+    }
+    
+    resultado = proveedor.actualizar_proveedor(proveedor_id, actualizaciones)
+    return jsonify({"mensaje": "Proveedor actualizado", "resultado": resultado.modified_count}), 200
+
+# Eliminar un proveedor 
+@proveedor_bp.route('/proveedores/<proveedor_id>', methods=['DELETE'])
+def eliminar_proveedor(proveedor_id):
+    from app import db
+    proveedor = Proveedor(db)
+    resultado = proveedor.eliminar_proveedor(proveedor_id)
+    
+    if resultado.deleted_count > 0:
+        return jsonify({"mensaje": "Proveedor eliminado"}), 200
+    return jsonify({"error": "Proveedor no encontrado"}), 404

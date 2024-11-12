@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Categoria.css';  
+import './Categoria.css'; 
+ 
 function Categoria() {
   const [categorias, setCategorias] = useState([]);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [mostrarFormularioAgregar, setMostrarFormularioAgregar] = useState(false);
+  const [mostrarFormularioEditar, setMostrarFormularioEditar] = useState(false);
+  const [categoriaEditar, setCategoriaEditar] = useState(null);
 
   // Obtener lista de categorías
   useEffect(() => {
@@ -31,6 +35,7 @@ function Categoria() {
         setNombre('');
         setDescripcion('');
         setMensaje('Categoría agregada con éxito');
+        setMostrarFormularioAgregar(false);
 
         // Recargar las categorías después de agregar una nueva
         axios.get('http://localhost:5000/api/categorias')
@@ -45,12 +50,62 @@ function Categoria() {
         console.error("Hubo un error al agregar la categoría:", error);
         setMensaje('Hubo un error al agregar la categoría');
       });
+    };
+
+     // Función para manejar la edición de una categoria
+  const handleEdit = (categoria) => {
+    setCategoriaEditar(categoria);
+    setMostrarFormularioEditar(true);
+    setMostrarFormularioAgregar(false); 
+  };
+
+
+    // Función para manejar la actualización de categorias
+  const handleUpdate = (e) => {
+    e.preventDefault();
+  
+    const categoriaActualizado = {
+      ...categoriaEditar,
+    };
+  
+    axios.put(`http://localhost:5000/api/categorias/${categoriaEditar._id}`, categoriaActualizado)
+      .then(() => {
+          setMensaje('Categoria actualizada con éxito');
+          setMostrarFormularioEditar(false); 
+  
+        return axios.get('http://localhost:5000/api/categorias');
+      })
+      .then(response => {
+          setCategorias(response.data);
+      })
+      .catch(error => {
+          console.error("Hubo un error al actualizar la actegoria:", error);
+          setMensaje('Hubo un error al actualizar la categoria');
+      });
+  };
+    
+    // Función para manejar la eliminación de categorias
+  const handleDelete = (id) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta categoria?')) {
+      axios.delete(`http://localhost:5000/api/categorias/${id}`)
+        .then(() => {
+          setCategorias(categorias.filter(categoria => categoria._id !== id));
+          setMensaje('Categoria eliminada con éxito');
+        })
+        .catch(error => {
+          console.error("Hubo un error al eliminar la categoria:", error);
+          setMensaje('Hubo un error al eliminar la acetgoria');
+        });
+    }
   };
 
   return (
     <div className="container">
-      <h2>Agregar Categoría</h2>
+       {/* Mensaje de éxito o error */}
+      {mensaje && <p>{mensaje}</p>} 
+    {mostrarFormularioAgregar && (
       <form onSubmit={handleSubmit} className="form-container">
+        <h2>Agregar Categoría</h2>
         <input
           type="text"
           value={nombre}
@@ -67,26 +122,55 @@ function Categoria() {
         />
         <button type="submit">Agregar Categoría</button>
       </form>
+    )}
 
-      {/* Mensaje de éxito o error */}
-      {mensaje && <p>{mensaje}</p>}
+    {/* Formulario para editar un producto */}
+    {mostrarFormularioEditar && categoriaEditar && (
+        <form onSubmit={handleUpdate} className="form-container">
+          <h2>Editar Categoria</h2>
+          <input
+            type="text"
+            value={categoriaEditar.nombre}
+            onChange={(e) => setCategoriaEditar({ ...categoriaEditar, nombre: e.target.value })}
+            placeholder="Nombre de la Categoria"
+            required
+          />
+          <input
+            type="text"
+            value={categoriaEditar.descripcion}
+            onChange={(e) => setCategoriaEditar({ ...categoriaEditar, descripcion: e.target.value })}
+            placeholder="Descripción"
+            required
+          />
+                   
+          <button type="submit">Actualizar Categoria</button>
+        </form>
+    )}
 
-      {/* Tabla de categorías */}
-      <h2>Lista de Categorías</h2>
+     <button onClick={() => setMostrarFormularioAgregar(!mostrarFormularioAgregar)}>
+        {mostrarFormularioAgregar ? 'Cancelar' : 'Agregar una Categoria'}
+      </button>
+
+    {/* Tabla de categorías */}
+    <h2>Lista de Categorías</h2>
       <table className="categorias-tabla">
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Acciones</th>
-          </tr>
+            <th >Acciones</th>
+            </tr>
         </thead>
         <tbody>
           {categorias.map(categoria => (
             <tr key={categoria._id}>
               <td>{categoria.nombre}</td>
               <td>{categoria.descripcion}</td>
-              <td></td>
+              <td className='action-buttons'>
+                <button className='btn-editar' onClick={() => handleEdit(categoria)} >Editar </button>
+                <button className='btn-eliminar'onClick={() => handleDelete(categoria._id)}>Eliminar</button>
+              </td>
+             
             </tr>
           ))}
         </tbody>

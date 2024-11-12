@@ -9,6 +9,8 @@ function Proveedores() {
   const [telefono, setTelefono] = useState('');
   const [email, setEmail] = useState('');
   const [mensaje, setMensaje] = useState('');
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [proveedorEditando, setProveedorEditando] = useState(null);
 
   // Obtener lista de proveedores
   useEffect(() => {
@@ -31,32 +33,68 @@ function Proveedores() {
       email
     };
 
-    axios.post('http://localhost:5000/api/proveedores', nuevoProveedor)
-      .then(() => {
-        setNombre('');
-        setDireccion('');
-        setTelefono('');
-        setEmail('');
-        setMensaje('Proveedor agregado con éxito');
+    if (modoEdicion) {
+      axios.put(`http://localhost:5000/api/proveedores/${proveedorEditando._id}`, nuevoProveedor)
+        .then(() => {
+          setModoEdicion(false);
+          setProveedorEditando(null);
+          actualizarListaProveedores();
+          setMensaje('Proveedor actualizado con éxito');
+        })
+        .catch(error => setMensaje('Hubo un problema al actualizar el proveedor.'));
+    } else {
+      axios.post('http://localhost:5000/api/proveedores', nuevoProveedor)
+        .then(() => {
+          setNombre('');
+          setDireccion('');
+          setTelefono('');
+          setEmail('');
+          setMensaje('Proveedor agregado con éxito');
+          actualizarListaProveedores();
+        })
+        .catch(error => {
+          console.error("Hubo un error al agregar el proveedor:", error);
+          setMensaje('Hubo un error al agregar el proveedor');
+        });
+    }
+  };
 
-        // Recargar los proveedores después de agregar uno nuevo
-        axios.get('http://localhost:5000/api/proveedores')
-          .then(response => {
-            setProveedores(response.data);
-          })
-          .catch(error => {
-            console.error("Hubo un error al obtener los proveedores:", error);
-          });
+  const actualizarListaProveedores = () => {
+    axios.get('http://localhost:5000/api/proveedores')
+      .then(response => 
+        {
+          setNombre('');
+          setDireccion('');
+          setTelefono('');
+          setEmail('');
+          setProveedores(response.data)
+        })
+      .catch(error => console.error("Hubo un problema al obtener los proveedores", error));
+  };
+
+  // Eliminar un proveedor
+  const eliminarProveedor = (id) => {
+    axios.delete(`http://localhost:5000/api/proveedores/${id}`)
+      .then(() => {
+        setMensaje('Proveedor eliminado con éxito');
+        actualizarListaProveedores()
       })
-      .catch(error => {
-        console.error("Hubo un error al agregar el proveedor:", error);
-        setMensaje('Hubo un error al agregar el proveedor');
-      });
+      .catch(error => setMensaje('Hubo un problema al eliminar el proveedor.'));
+  };
+
+  // Iniciar la edición de un proveedor
+  const editarProveedor = (proveedor) => {
+    setModoEdicion(true);
+    setProveedorEditando(proveedor);
+    setNombre(proveedor.nombre);
+    setDireccion(proveedor.direccion);
+    setTelefono(proveedor.telefono);
+    setEmail(proveedor.email);
   };
 
   return (
     <div className="container">
-      <h2>Agregar Proveedor</h2>
+      <h2>{modoEdicion ? "Actualizar Proveedor" : "Agregar Proveedor"}</h2>
       <form onSubmit={handleSubmit} className="form-container">
         <input
           type="text"
@@ -86,13 +124,11 @@ function Proveedores() {
           placeholder="Correo Electrónico"
           required
         />
-        <button type="submit">Agregar Proveedor</button>
+        <button type="submit">{modoEdicion ? "Actualizar" : "Agregar"} Proveedor</button>
       </form>
 
-      {/* Mensaje de éxito o error */}
       {mensaje && <p>{mensaje}</p>}
 
-      {/* Tabla de proveedores */}
       <h2>Lista de Proveedores</h2>
       <table className="proveedores-tabla">
         <thead>
@@ -101,6 +137,7 @@ function Proveedores() {
             <th>Dirección</th>
             <th>Teléfono</th>
             <th>Correo Electrónico</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -110,6 +147,10 @@ function Proveedores() {
               <td>{proveedor.direccion}</td>
               <td>{proveedor.telefono}</td>
               <td>{proveedor.email}</td>
+              <td>
+                <button className="btn-editar" onClick={() => editarProveedor(proveedor)}>Actualizar</button>
+                <button className="btn-eliminar" onClick={() => eliminarProveedor(proveedor._id)}>Eliminar</button>
+              </td>
             </tr>
           ))}
         </tbody>

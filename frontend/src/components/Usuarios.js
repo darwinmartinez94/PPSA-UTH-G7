@@ -131,8 +131,8 @@ return (
               <td>{usuario.correo}</td>
               <td>{usuario.rol}</td>
               <td>
-                <button onClick={() => editarUsuario(usuario)}>Editar</button>
-                <button onClick={() => eliminarUsuario(usuario._id)}>Eliminar</button>
+                <button className="btn-editar" onClick={() => editarUsuario(usuario)}>Editar</button>
+                <button className="btn-eliminar" onClick={() => eliminarUsuario(usuario._id)}>Eliminar</button>
               </td>
             </tr>
           ))}

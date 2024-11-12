@@ -38,6 +38,23 @@ input:focus {
   border-color: #28a745;
 }
 
+.form-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-field label {
+  margin-right: 10px;
+  min-width: 150px; /* Ajusta según sea necesario */
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 select {
   padding: 12px;
   font-size: 1rem;
@@ -119,7 +136,7 @@ button[type="button"]:hover {
 
 .btn-editar,
 .btn-eliminar {
-  padding: 5px 12px;
+  padding: 5px 12px 5px 10px;
   font-size: 0.9rem;
   color: #fff;
   border: none;
@@ -138,6 +155,7 @@ button[type="button"]:hover {
 }
 
 .btn-eliminar {
+  margin-top: 5px;
   background-color: #dc3545;
 }
 

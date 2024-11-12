@@ -32,3 +32,29 @@ def contar_categorias():
     from app import db
     count = db['categorias'].count_documents({})
     return jsonify({"total_categorias": count}),200
+
+# Actualizar una categoria por ID
+@categoria_bp.route('/categorias/<categoria_id>', methods=['PUT'])
+def actualizar_categoria(categoria_id):
+    from app import db
+    data = request.json
+    categoria = Categoria(db)
+    
+    actualizaciones = {
+        "nombre": data.get('nombre'),
+        "descripcion": data.get('descripcion'),
+       
+    } 
+    resultado = categoria.actualizar_categoria(categoria_id, actualizaciones)
+    return jsonify({"mensaje": "categoria actualizada", "resultado": resultado.modified_count}), 200
+
+ #Eliminar una categoria por ID
+@categoria_bp.route('/categorias/<categoria_id>', methods=['DELETE'])
+def eliminar_categoria(categoria_id):
+    from app import db
+    categoria = Categoria(db)
+    resultado = categoria.eliminar_categoria(categoria_id)
+    
+    if resultado.deleted_count > 0:
+        return jsonify({"mensaje": "Categoria eliminada"}), 200
+    return jsonify({"error": "Categoria no encontrada"}), 404

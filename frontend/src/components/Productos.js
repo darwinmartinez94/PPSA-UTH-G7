@@ -11,6 +11,7 @@ function Productos() {
   const [mostrarFormularioAgregar, setMostrarFormularioAgregar] = useState(false);
   const [mostrarFormularioEditar, setMostrarFormularioEditar] = useState(false);
   const [productoEditar, setProductoEditar] = useState(null);
+  const [mostrarFecha, setMostrarFecha] = useState(false);
 
   // Obtener el usuario actual desde el contexto de autenticación
   const { userName } = useContext(AuthContext);
@@ -47,7 +48,6 @@ function Productos() {
   // Función para manejar la actualización de productos
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const stockAnterior = productoEditar.cantidad_stock;
 
     const productoActualizado = {
       ...productoEditar,
@@ -61,18 +61,7 @@ function Productos() {
       await axios.put(`http://localhost:5000/api/productos/${productoEditar._id}`, productoActualizado);
       setMensaje('Producto actualizado con éxito');
       setMostrarFormularioEditar(false);
-
-      // Registra un movimiento en el historial si cambió el stock
-      if (stockAnterior !== productoActualizado.cantidad_stock) {
-        const movimiento = {
-          tipo_movimiento: productoActualizado.cantidad_stock > stockAnterior ? 'entrada' : 'salida',
-          cantidad: Math.abs(productoActualizado.cantidad_stock - stockAnterior),
-          descripcion: 'Actualización de stock',
-          actualizado_por: userName
-        };
-        await axios.post(`http://localhost:5000/api/productos/${productoEditar._id}/movimiento`, movimiento);
-      }
-
+      
       // Actualiza la lista de productos
       const productosResponse = await axios.get('http://localhost:5000/api/productos');
       setProductos(productosResponse.data);
@@ -141,6 +130,10 @@ function Productos() {
 
   };
 
+  const handleCheckboxChange = () => {
+    setMostrarFecha(!mostrarFecha);
+  }
+
   return (
     <div className="container">
       {mensaje && <p>{mensaje}</p>}
@@ -169,12 +162,15 @@ function Productos() {
             ))}
           </select>
           <label>
-          <input type="checkbox" name="disponible" /> Producto Disponible  
+          <input type="checkbox" name="disponible" /> Marcar si el Producto estara disponible inmediatamente 
           </label>
-          <label>
-            Fecha de Caducidad:
-            <input type="date" name="caducidad" placeholder="Fecha de Caducidad (Opcional)" />
-          </label>
+          <label> 
+          <input type="checkbox" name="caducidadCheckbox" onChange={handleCheckboxChange} /> 
+          Ingresar fecha de caducidad 
+          </label> {mostrarFecha && ( 
+            <label> Fecha de Caducidad: 
+            <input type="date" name="caducidad" placeholder="Fecha de Caducidad (Opcional)" /> 
+            </label> )}
           <input type="number" name="stock_min" placeholder="Stock Mínimo (Opcional)" />
           <input type="number" name="stock_max" placeholder="Stock Máximo (Opcional)" />
           <button type="submit">Agregar Producto</button>
@@ -183,21 +179,29 @@ function Productos() {
 
       {mostrarFormularioEditar && productoEditar && (
         <form onSubmit={handleUpdate} className="form-container">
-          <h2>Editar Producto</h2>
+        <h2>Editar Producto</h2>
+        <div className="form-field">
+          <label>Nombre:</label>
           <input
             type="text"
             value={productoEditar.nombre}
             onChange={(e) => setProductoEditar({ ...productoEditar, nombre: e.target.value })}
             placeholder="Nombre del Producto"
             required
-          />
+          /> 
+        </div>
+        <div className="form-field">
+          <label>Descripción:</label>
           <input
             type="text"
             value={productoEditar.descripcion}
             onChange={(e) => setProductoEditar({ ...productoEditar, descripcion: e.target.value })}
             placeholder="Descripción"
             required
-          />
+          /> 
+        </div>
+        <div className="form-field">
+          <label>Categoría:</label>
           <select
             value={productoEditar.categoria}
             onChange={(e) => setProductoEditar({ ...productoEditar, categoria: e.target.value })}
@@ -210,20 +214,29 @@ function Productos() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="form-field">
+          <label>Cantidad existente:</label>
           <input
             type="number"
             value={productoEditar.cantidad_stock}
             onChange={(e) => setProductoEditar({ ...productoEditar, cantidad_stock: e.target.value })}
             placeholder="Cantidad en Stock"
             required
-          />
+          /> 
+        </div>
+        <div className="form-field">
+          <label>Precio:</label>
           <input
             type="number"
             value={productoEditar.precio_unitario}
             onChange={(e) => setProductoEditar({ ...productoEditar, precio_unitario: e.target.value })}
             placeholder="Precio Unitario"
             required
-          />
+          /> 
+        </div>
+        <div className="form-field">
+          <label>Proveedor:</label>
           <select
             value={productoEditar.proveedor}
             onChange={(e) => setProductoEditar({ ...productoEditar, proveedor: e.target.value })}
@@ -236,6 +249,8 @@ function Productos() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="form-field">
           <label>
             <input
               type="checkbox"
@@ -243,19 +258,42 @@ function Productos() {
               onChange={(e) => setProductoEditar({ ...productoEditar, disponible: e.target.checked })}
             /> Producto Disponible
           </label>
-          <label>
-            Fecha de Caducidad:
-            <input
-              type="date"
-              value={productoEditar.caducidad ? new Date(productoEditar.caducidad).toISOString().substring(0, 10) : ''}
-              onChange={(e) => setProductoEditar({ ...productoEditar, caducidad: e.target.value })}
-              placeholder="Fecha de Caducidad"
-            />
-          </label>
+        </div>
+        <div className="form-field">
+          <label>Fecha de Caducidad:</label>
+          <input
+            type="date"
+            value={productoEditar.caducidad ? new Date(productoEditar.caducidad).toISOString().substring(0, 10) : ''}
+            onChange={(e) => setProductoEditar({ ...productoEditar, caducidad: e.target.value })}
+            placeholder="Fecha de Caducidad"
+          />
+        </div>
+        <div className="form-field">
+          <label>Stock Mínimo (Opcional):</label>
+          <input
+            type="number"
+            value={productoEditar.stock_min}
+            onChange={(e) => setProductoEditar({ ...productoEditar, stock_min: e.target.value })}
+            placeholder="Stock Mínimo"
+          />
+        </div>
+        <div className="form-field">
+          <label>Stock Máximo (Opcional):</label>
+          <input
+            type="number"
+            value={productoEditar.stock_max}
+            onChange={(e) => setProductoEditar({ ...productoEditar, stock_max: e.target.value })}
+            placeholder="Stock Máximo"
+          />
+        </div>
+        <div className="form-buttons">
           <button type="submit">Actualizar Producto</button>
-        </form>
+          <button type="button" onClick={() => setMostrarFormularioEditar(false)}>Cancelar</button>
+        </div>
+      </form>      
+     
       )}
-
+      
       <button onClick={() => setMostrarFormularioAgregar(!mostrarFormularioAgregar)}>
         {mostrarFormularioAgregar ? 'Cancelar' : 'Agregar Producto Nuevo'}
       </button>
@@ -286,8 +324,8 @@ function Productos() {
               <td>{producto.disponible ? 'Sí' : 'No'}</td>
               <td>{producto.caducidad ? new Date(producto.caducidad).toLocaleDateString() : 'N/A'}</td>
               <td>
-                <button onClick={() => handleEdit(producto)}>Editar</button>
-                <button onClick={() => handleDelete(producto._id)}>Eliminar</button>
+                <button className='btn-editar' onClick={() => handleEdit(producto)}>Editar</button>
+                <button className='btn-eliminar' onClick={() => handleDelete(producto._id)}>Eliminar</button>
               </td>
             </tr>
           ))}
