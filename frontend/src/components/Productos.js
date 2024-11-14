@@ -110,7 +110,7 @@ function Productos() {
       proveedor: e.target.proveedor.value,
       actualizado_por: userName,
       disponible: e.target.disponible.checked,
-      caducidad: e.target.caducidad.value ? new Date(e.target.caducidad.value).toISOString() : null,
+      caducidad: e.target.caducidad && e.target.caducidad.value ? new Date(e.target.caducidad.value).toISOString() : null,
       stock_min: parseInt(e.target.stock_min.value),
       stock_max: parseInt(e.target.stock_max.value)
     };

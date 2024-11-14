@@ -17,6 +17,10 @@ import SupervisorProveedor from './components/SupervisorProveedor'
 import Usuariocategoria from './components/UsuarioCategoria'
 import UsuarioProductos from './components/UsuarioProductos'
 import Transacciones from './components/Transacciones';
+import Reportes from './components/Reportes';
+import Perfil from './components/Perfil';
+import Salir from './components/Salir';
+
 
 function App() {
   const { userRole } = useContext(AuthContext);
@@ -37,6 +41,9 @@ function App() {
             <Route path="proveedores" element={<Proveedores />} />
             <Route path="usuarios" element={<Usuarios />} />
             <Route path="transacciones" element={<Transacciones />}/>
+            <Route path="reportes" element = {<Reportes />} />
+            <Route path="perfil" element = {<Perfil />} />
+            <Route path="salir" element ={<Salir />} />
 
           </Route>
         )}
@@ -50,6 +57,8 @@ function App() {
             <Route path="productos" element={<SupervisorProductos />} />
             <Route path="categorias" element={<SupervisorCategorias />} />
             <Route path="proveedores" element={<SupervisorProveedor />} />
+            <Route path="perfil" element = {<Perfil />} />
+            <Route path="salir" element ={<Salir />} />
 
           </Route>
          
@@ -62,6 +71,8 @@ function App() {
             <Route path="dashboard" element={<Resumen/>} />
             <Route path="productos" element={<UsuarioProductos />} />
             <Route path="categorias" element={<Usuariocategoria />} />
+            <Route path="perfil" element = {<Perfil />} />
+            <Route path="salir" element ={<Salir />} />
         </Route>
         
         )}

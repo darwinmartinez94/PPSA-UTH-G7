@@ -15,6 +15,8 @@ function AdminDashboard() {
           <li><Link to="/admin/usuarios">Usuarios</Link></li>
           <li><Link to="/admin/transacciones">Transacciones</Link></li>
           <li><Link to="/admin/reportes">Reportes</Link></li>
+          <li><Link to="/admin/perfil">Perfil</Link></li>
+          <li><Link to="/admin/salir">Salir</Link></li>
         </ul>
       </nav>
 

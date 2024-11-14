@@ -86,7 +86,7 @@ function Transacciones(){
             {mensaje && <p>{mensaje}</p>}
 
             <h2>Lista de Transacciones</h2>
-            <table>
+            <table className="productos-tabla">
                 <thead>
                     <tr>
                         <th>Tipo de Transacción</th>
