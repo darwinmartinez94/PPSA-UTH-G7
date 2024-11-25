@@ -1,13 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Error404.css';
-import errorImage from './Error_404.jpeg';  // Importa la imagen
+import errorImage from './Error_404.jpeg';  
 
 function Error404() {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate('/');  // Navega de vuelta a la ruta del login
+    navigate('/login');  // Navega de vuelta a la ruta del login
   };
 
   return (
@@ -18,7 +18,7 @@ function Error404() {
         <h2>PPSA-UTH-G7</h2>
         <p>Página no encontrada</p>
         <img
-          src={errorImage}  // Utiliza la imagen importada
+          src={errorImage} 
           alt="Página no encontrada"
         />
         <button onClick={handleGoBack}>Regresar al Login</button>

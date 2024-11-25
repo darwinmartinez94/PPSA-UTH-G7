@@ -8,7 +8,7 @@ function LoginRegister() {
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [user, setUser] = useState({ nombre: '', correo: '', contrasenia: '', rol: '', admin_password: '' });
   const [error, setError] = useState('');
-  const { login, userRole, userName } = useContext(AuthContext)
+  const { login, userRole } = useContext(AuthContext)
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -24,6 +24,7 @@ function LoginRegister() {
       }
       await axios.post('http://localhost:5000/api/usuarios', user);
       alert("Usuario registrado con éxito");
+
       setIsLoginActive(true); 
     } catch (error) {
       setError(error.response?.data?.error || 'Error al registrar');
@@ -40,6 +41,9 @@ function LoginRegister() {
       const token = response.data.token;
       const role = response.data.role;
       login(token, role);
+      console.log(token)
+      console.log(user.name)
+      console.log(user.correo)
       alert("Inicio de sesión exitoso");
     } catch (error) {
       setError('Credenciales incorrectas');

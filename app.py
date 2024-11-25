@@ -29,7 +29,7 @@ app.register_blueprint(proveedor_bp, url_prefix='/api')
 app.register_blueprint(usuario_bp, url_prefix='/api')
 app.register_blueprint(transaccion_bp, url_prefix='/api')
 
-@app.route('/')
+@app.route('/login')
 def home():
     return "Sistema de Inventario UTH-PPSA-G7"
 

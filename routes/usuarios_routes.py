@@ -32,13 +32,11 @@ def login_usuario():
     data = request.json
     usuario = Usuario(db)
     
-    # Verificar si las credenciales son correctas
     if usuario.verificar_contrasenia(data['correo'], data['contrasenia']):
-        usuario_data = usuario.obtener_usuario_por_correo(data['correo'])  # Obtener todos los datos del usuario
-        rol = usuario_data.get("rol")  # Obtener el rol del usuario
-        nombre = usuario_data.get("nombre") #Obtener el nombre del usuario
+        usuario_data = usuario.obtener_usuario_por_correo(data['correo'])
+        rol = usuario_data.get("rol")
+        nombre = usuario_data.get("nombre")
 
-        # Generar un token de autenticación 
         payload = {
             "correo": data['correo'],
             "nombre": nombre,
@@ -48,8 +46,56 @@ def login_usuario():
         token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
         
         return jsonify({"token": token, "rol": rol, "nombre": nombre, "mensaje": "Inicio de sesión exitoso"}), 200
+        
     else:
         return jsonify({"error": "Credenciales incorrectas"}), 401
+
+
+#ruta para actualizar contraseña desde el perfil
+@usuario_bp.route('/usuarios/actualizar_contrasenia', methods=['PUT'])
+def actualizar_contrasenia():
+    token = request.headers.get('Authorization')  # Obtener el token del encabezado
+    
+    if not token or "Bearer " not in token:
+        return jsonify({"error": "Token no proporcionado o mal formateado"}), 401
+
+    try:
+        # Decodificar el token
+        token = token.split(" ")[1]
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        
+        # Obtener el correo del payload
+        correo = payload.get('correo')
+        if not correo:
+            return jsonify({"error": "Correo no encontrado en el token"}), 400
+        
+        # Obtener los datos del usuario desde la DB
+        from app import db
+        usuario = Usuario(db)
+        usuario_data = usuario.obtener_usuario_por_correo(correo)
+        
+        if not usuario_data:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+        
+        # Extraer la nueva contraseña del cuerpo de la solicitud
+        nueva_contrasenia = request.json.get('contrasenia')
+        
+        if not nueva_contrasenia:
+            return jsonify({"error": "La nueva contraseña es requerida"}), 400
+        
+        # Actualizar la contraseña
+        resultado = usuario.actualizar_usuario(usuario_data['_id'], {"contrasenia": nueva_contrasenia})
+        
+        if resultado.modified_count == 0:
+            return jsonify({"error": "No se pudo actualizar la contraseña"}), 500
+
+        return jsonify({"mensaje": "Contraseña actualizada exitosamente"}), 200
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "El token ha expirado"}), 401
+    except jwt.InvalidTokenError:
+        return jsonify({"error": "Token inválido"}), 401
+    except Exception as e:
+        return jsonify({"error": f"Error interno: {str(e)}"}), 500
 
 
 # Obtener todos los usuarios

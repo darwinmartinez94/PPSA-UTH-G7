@@ -26,13 +26,27 @@ class Usuario:
         return self.collection.find_one({"_id": ObjectId(usuario_id)})
 
     def actualizar_usuario(self, usuario_id, actualizaciones):
-        # Si la contraseña es parte de las actualizaciones, encriptarla
+    # Validar que las actualizaciones incluyan una contraseña válida
         if 'contrasenia' in actualizaciones:
-            actualizaciones['contrasenia'] = bcrypt.hashpw(actualizaciones['contrasenia'].encode('utf-8'), bcrypt.gensalt())
+            nueva_contrasenia = actualizaciones['contrasenia']
+            if not nueva_contrasenia or len(nueva_contrasenia) < 6:
+             raise ValueError("La contraseña debe tener al menos 6 caracteres.")
+        
+            # Encriptar la contraseña antes de guardarla
+            actualizaciones['contrasenia'] = bcrypt.hashpw(
+                nueva_contrasenia.encode('utf-8'),
+                bcrypt.gensalt()
+        )
 
+        # Agregar fecha de actualización
         actualizaciones['fecha_actualizacion'] = datetime.now()
 
-        return self.collection.update_one({"_id": ObjectId(usuario_id)}, {"$set": actualizaciones})
+        # Actualizar el documento en la base de datos
+        return self.collection.update_one(
+            {"_id": ObjectId(usuario_id)},  # Convertir ID si es necesario
+            {"$set": actualizaciones}
+    )
+
 
     def eliminar_usuario(self, usuario_id):
         return self.collection.delete_one({"_id": ObjectId(usuario_id)})

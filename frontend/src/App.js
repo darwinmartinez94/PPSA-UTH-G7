@@ -29,8 +29,8 @@ function App() {
   return (
     <Router>
       <Routes>
-       
-        <Route path="/" element={<LoginRegister />} />
+        <Route path="/login" element={<LoginRegister />} />
+        <Route path="/" element={<Navigate to="/login" />} />
 
         {userRole === 'Administrador' && (
           <Route path="/admin" element = {<AdminDashboard/>}>
@@ -86,23 +86,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
- 
-

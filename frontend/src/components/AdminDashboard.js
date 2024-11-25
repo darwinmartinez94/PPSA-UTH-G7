@@ -8,7 +8,7 @@ function AdminDashboard() {
       <nav className="sidebar">
         <h2>Inventario</h2>
         <ul>
-        <li><Link to="/admin/dashboard">Resumen</Link></li>
+          <li><Link to="/admin/dashboard">Resumen</Link></li>
           <li><Link to="/admin/productos">Productos</Link></li>
           <li><Link to="/admin/categorias">Categorías</Link></li>
           <li><Link to="/admin/proveedores">Proveedores</Link></li>

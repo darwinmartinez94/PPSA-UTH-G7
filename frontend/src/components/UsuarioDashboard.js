@@ -12,6 +12,8 @@ function UsuarioDashboard (){
                 <li><Link to="/usuario/dashboard">Resumen</Link></li>
                 <li><Link to="/usuario/productos">Productos</Link></li>
                 <li><Link to="/usuario/categorias">Categorias</Link></li>
+                <li><Link to="/usuario/perfil">Perfil</Link></li>
+                <li><Link to="/usuario/salir">Salir</Link></li>
             </ul>
             </nav> 
 
