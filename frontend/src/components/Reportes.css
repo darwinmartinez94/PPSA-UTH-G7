@@ -1,0 +1,51 @@
+.menu {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.menu button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.menu button:hover {
+    background-color: #2980b9;
+}
+
+.report-content {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #0044cc;
+    color: white;
+}
+/* Footer or empty message */
+.empty-message {
+    text-align: center;
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-top: 20px;
+}

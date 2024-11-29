@@ -7,9 +7,11 @@ import { useNavigate } from 'react-router-dom';
 function LoginRegister() {
   const [isLoginActive, setIsLoginActive] = useState(true);
   const [user, setUser] = useState({ nombre: '', correo: '', contrasenia: '', rol: '', admin_password: '' });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const { login, userRole } = useContext(AuthContext)
   const navigate = useNavigate();
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +22,20 @@ function LoginRegister() {
     try {
       if (user.rol === 'Administrador' && user.admin_password !== 'UTH2024') {
         setError('Ingrese la contraseña para ser administrador del sistema');
+        showError(error.response?.data?.error || "Ingrese la contraseña para ser administrador del sistema");
         return;
       }
       await axios.post('http://localhost:5000/api/usuarios', user);
-      alert("Usuario registrado con éxito");
+      setMessage("Usuario registrado con éxito");
+      setError(""); 
+      hideMessage(); 
+      
+      //alert("Usuario registrado con éxito");
 
       setIsLoginActive(true); 
     } catch (error) {
       setError(error.response?.data?.error || 'Error al registrar');
+      showError(error.response?.data?.error || "Error al registrar");
     }
   };
 
@@ -37,17 +45,36 @@ function LoginRegister() {
         correo: user.correo,
         contrasenia: user.contrasenia,
       });
-      // Guarda el token en el localStorage o maneja la sesión
+      // Guarda el token en el localStorage
       const token = response.data.token;
       const role = response.data.role;
       login(token, role);
-      console.log(token)
-      console.log(user.name)
-      console.log(user.correo)
+      //console.log(token)
+      //console.log(user.name)
+      //console.log(user.correo)
+      setMessage("Inicio de sesión exitoso");
+      setError(""); 
+      hideMessage(); 
       alert("Inicio de sesión exitoso");
+
     } catch (error) {
       setError('Credenciales incorrectas');
+      showError(error.response?.data?.error || "Credenciales incorrectas");
     }
+  };
+
+  const showError = (errorMsg) => {
+    setError(errorMsg);
+    setTimeout(() => {
+      setError("");
+    }, 2000);
+  };
+
+  
+  const hideMessage = () => {
+    setTimeout(() => {
+      setMessage("");
+    }, 2000);
   };
 
   useEffect(() => {
@@ -165,6 +192,7 @@ function LoginRegister() {
         handleLogin();
         }} style={{ display: isLoginActive ? 'block' : 'none' }}>
         <h2>Iniciar Sesión</h2>
+        {message && <div className="message">{message}</div>}
         {error && <p className="error">{error}</p>}
         <input
             type="email"
@@ -207,6 +235,7 @@ function LoginRegister() {
         handleRegister();
         }} style={{ display: isLoginActive ? 'none' : 'block' }}>
         <h2>Registrarse</h2>
+        {message && <div className="message">{message}</div>}
         {error && <p className="error">{error}</p>}
         <input
             type="text"

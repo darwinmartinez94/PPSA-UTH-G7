@@ -8,7 +8,8 @@ function Proveedores() {
   const [direccion, setDireccion] = useState('');
   const [telefono, setTelefono] = useState('');
   const [email, setEmail] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
   const [modoEdicion, setModoEdicion] = useState(false);
   const [proveedorEditando, setProveedorEditando] = useState(null);
 
@@ -20,6 +21,8 @@ function Proveedores() {
       })
       .catch(error => {
         console.error("Hubo un error al obtener los proveedores:", error);
+        setError(error.response?.data?.error || 'Hubo un error al obtener los proveedores');
+        showError(error.response?.data?.error || "Hubo un error al obtener los proveedores");
       });
   }, []);
 
@@ -40,6 +43,8 @@ function Proveedores() {
           setProveedorEditando(null);
           actualizarListaProveedores();
           setMensaje('Proveedor actualizado con éxito');
+          setError("");
+          hideMessage();
         })
         .catch(error => setMensaje('Hubo un problema al actualizar el proveedor.'));
     } else {
@@ -50,11 +55,15 @@ function Proveedores() {
           setTelefono('');
           setEmail('');
           setMensaje('Proveedor agregado con éxito');
+          setError("");
+          hideMessage();
           actualizarListaProveedores();
         })
         .catch(error => {
-          console.error("Hubo un error al agregar el proveedor:", error);
-          setMensaje('Hubo un error al agregar el proveedor');
+          console.error("Hubo un error al agregar el proveedor:", error); 
+          setError(error.response?.data?.error || 'Hubo un error al agregar el proveedor');
+          showError(error.response?.data?.error || "Hubo un error al obtener el proveedor");
+        
         });
     }
   };
@@ -69,7 +78,12 @@ function Proveedores() {
           setEmail('');
           setProveedores(response.data)
         })
-      .catch(error => console.error("Hubo un problema al obtener los proveedores", error));
+      .catch(error => {
+       console.error("Hubo un problema al obtener los proveedores", error);
+       setError(error.response?.data?.error || 'Hubo un error al obtener los proveedores');
+       showError(error.response?.data?.error || "Hubo un error al obtener los proveedores"); 
+      }
+      );
   };
 
   // Eliminar un proveedor
@@ -77,9 +91,14 @@ function Proveedores() {
     axios.delete(`http://localhost:5000/api/proveedores/${id}`)
       .then(() => {
         setMensaje('Proveedor eliminado con éxito');
+        setError("");
+        hideMessage();
         actualizarListaProveedores()
       })
-      .catch(error => setMensaje('Hubo un problema al eliminar el proveedor.'));
+      .catch(error => {
+        setError(error.response?.data?.error || 'Hubo un problema al eliminar el proveedor');
+        showError(error.response?.data?.error || "Hubo un error al eliminar el proveedor");
+      })
   };
 
   // Iniciar la edición de un proveedor
@@ -92,6 +111,19 @@ function Proveedores() {
     setEmail(proveedor.email);
   };
 
+  const showError = (errorMsg) => {
+    setError(errorMsg);
+    setTimeout(() => {
+      setError("");
+    }, 2000);
+  };
+
+  const hideMessage = () => {
+    setTimeout(() => {
+      setMensaje("");
+    }, 2000);
+  };
+  
   return (
     <div className="container">
       <h2>{modoEdicion ? "Actualizar Proveedor" : "Agregar Proveedor"}</h2>
@@ -127,8 +159,9 @@ function Proveedores() {
         <button type="submit">{modoEdicion ? "Actualizar" : "Agregar"} Proveedor</button>
       </form>
 
-      {mensaje && <p>{mensaje}</p>}
-
+      {mensaje && <div className="message">{mensaje}</div>}
+      {error && <p className="error">{error}</p>}
+      
       <h2>Lista de Proveedores</h2>
       <table className="proveedores-tabla">
         <thead>

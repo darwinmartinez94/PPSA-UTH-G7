@@ -37,7 +37,7 @@ function Perfil() {
     }
 
     try {
-      const response = await axios.put(
+      await axios.put(
         "http://localhost:5000/api/usuarios/actualizar_contrasenia",
         { contrasenia: newPassword },
         {
@@ -47,16 +47,16 @@ function Perfil() {
         }
       );
       setMessage("Contraseña actualizada con éxito");
-      setNewPassword(""); // Limpiar el campo de la contraseña
+      setNewPassword(""); 
       setError(""); 
-      hideMessage(); // Ocultar el mensaje después de 2 segundos
+      hideMessage(); 
     } catch (err) {
       console.error("Error al actualizar la contraseña:", err.response?.data || err.message);
       showError(err.response?.data?.error || "Error al actualizar la contraseña.");
     }
   };
 
-  // Mostrar error y ocultarlo automáticamente después de 2 segundos
+  
   const showError = (errorMsg) => {
     setError(errorMsg);
     setTimeout(() => {
@@ -64,7 +64,7 @@ function Perfil() {
     }, 2000);
   };
 
-  // Mostrar mensaje de éxito y ocultarlo automáticamente después de 2 segundos
+  
   const hideMessage = () => {
     setTimeout(() => {
       setMessage("");

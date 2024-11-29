@@ -6,7 +6,8 @@ function Categoria() {
   const [categorias, setCategorias] = useState([]);
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [mensaje, setMensaje] = useState('');
+  const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
   const [mostrarFormularioAgregar, setMostrarFormularioAgregar] = useState(false);
   const [mostrarFormularioEditar, setMostrarFormularioEditar] = useState(false);
   const [categoriaEditar, setCategoriaEditar] = useState(null);
@@ -19,6 +20,8 @@ function Categoria() {
       })
       .catch(error => {
         console.error("Hubo un error al obtener las categorías:", error);
+        setError(error.response?.data?.error || "Hubo un error al obtener las categorias");
+        showError(error.response?.data?.error || "Hubo un error al obtener las categorias");
       });
   }, []);
 
@@ -35,6 +38,8 @@ function Categoria() {
         setNombre('');
         setDescripcion('');
         setMensaje('Categoría agregada con éxito');
+        setError(""); 
+        hideMessage(); 
         setMostrarFormularioAgregar(false);
 
         // Recargar las categorías después de agregar una nueva
@@ -44,11 +49,14 @@ function Categoria() {
           })
           .catch(error => {
             console.error("Hubo un error al obtener las categorías:", error);
+            setError(error.response?.data?.error || "Hubo un error al obtener las categorias");
+            showError(error.response?.data?.error || "Hubo un error al obtener las categorias");
           });
       })
       .catch(error => {
         console.error("Hubo un error al agregar la categoría:", error);
-        setMensaje('Hubo un error al agregar la categoría');
+        setError(error.response?.data?.error || "Hubo un error al agregar la categoria");
+        showError(error.response?.data?.error || "Hubo un error al agregar la categoria");
       });
     };
 
@@ -71,6 +79,8 @@ function Categoria() {
     axios.put(`http://localhost:5000/api/categorias/${categoriaEditar._id}`, categoriaActualizado)
       .then(() => {
           setMensaje('Categoria actualizada con éxito');
+          setError(""); 
+          hideMessage(); 
           setMostrarFormularioEditar(false); 
   
         return axios.get('http://localhost:5000/api/categorias');
@@ -80,7 +90,8 @@ function Categoria() {
       })
       .catch(error => {
           console.error("Hubo un error al actualizar la actegoria:", error);
-          setMensaje('Hubo un error al actualizar la categoria');
+          setError(error.response?.data?.error || "Hubo un error al actualizar la categoria");
+          showError(error.response?.data?.error || "Hubo un error al actualizar la categoria");
       });
   };
     
@@ -91,18 +102,36 @@ function Categoria() {
         .then(() => {
           setCategorias(categorias.filter(categoria => categoria._id !== id));
           setMensaje('Categoria eliminada con éxito');
+          setError(""); 
+          hideMessage(); 
         })
         .catch(error => {
           console.error("Hubo un error al eliminar la categoria:", error);
-          setMensaje('Hubo un error al eliminar la acetgoria');
+          setError(error.response?.data?.error || "Hubo un error al eliminar la categoria");
+          showError(error.response?.data?.error || "Hubo un error al eliminar la categoria");
+          
         });
     }
+  };
+
+  const showError = (errorMsg) => {
+    setError(errorMsg);
+    setTimeout(() => {
+      setError("");
+    }, 2000);
+  };
+  
+  const hideMessage = () => {
+    setTimeout(() => {
+      setMensaje("");
+    }, 2000);
   };
 
   return (
     <div className="container">
        {/* Mensaje de éxito o error */}
-      {mensaje && <p>{mensaje}</p>} 
+       {mensaje && <div className="message">{mensaje}</div>}
+       {error && <p className="error">{error}</p>}
     {mostrarFormularioAgregar && (
       <form onSubmit={handleSubmit} className="form-container">
         <h2>Agregar Categoría</h2>

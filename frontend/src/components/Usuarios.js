@@ -8,7 +8,8 @@ function Usuarios(){
     const [correo, setCorreo] = useState('');
     const [contrasenia, setContrasenia] = useState('');
     const [rol, setRol] = useState('');
-    const [mensaje, setMensaje] = useState('');
+    const [mensaje, setMensaje] = useState("");
+    const [error, setError] = useState("");
     const [modoEdicion, setModoEdicion] = useState(false);
     const [usuarioEditando, setUsuarioEditando] = useState(null);
 
@@ -19,7 +20,10 @@ useEffect(() => {
         setUsuarios(Response.data)
     })
     .catch(error => {
-        console.error("Hubo un problema al obtener los usuarios",error)
+        console.error("Hubo un problema al obtener los usuarios",error);
+        setError(error.response?.data?.error || 'Hubo un problema al obtener los usuarios');
+        showError(error.response?.data?.error || "Hubo un problema al obtener los usuarios");
+        
     });
 }, []);
 
@@ -37,9 +41,18 @@ const handleSubmit = (e) => {
           .then(() => {
               setModoEdicion(false);
               setUsuarioEditando(null);
+              setMensaje('Usuario actualizado con éxito');
+              setError("");
+              hideMessage();
               actualizarListaUsuarios();
           })
-          .catch(error => setMensaje('Hubo un problema al actualizar el usuario.'));
+          .catch(error => {
+            setError(error.response?.data?.error || 'Hubo un problema al actualizar el usuario');
+            showError(error.response?.data?.error || "Hubo un problema al actualizar el usuario");
+          }
+            
+            
+          );
   } else {
       axios.post('http://localhost:5000/api/usuarios', nuevoUsuario)
           .then(() => {
@@ -48,23 +61,43 @@ const handleSubmit = (e) => {
               setContrasenia('');
               setRol('');
               setMensaje('Usuario agregado exitosamente.');
+              setError("");
+              hideMessage();
               actualizarListaUsuarios();
           })
-          .catch(error => setMensaje('Hubo un problema al agregar el usuario.'));
+          .catch(error => {
+            setError(error.response?.data?.error || 'Hubo un problema al agregar el usuario');
+            showError(error.response?.data?.error || "Hubo un problema al agregar el usuario");
+          })
   }
 };
 
 const actualizarListaUsuarios = () => {
   axios.get('http://localhost:5000/api/usuarios')
       .then(response => setUsuarios(response.data))
-      .catch(error => console.error("Hubo un problema al obtener los usuarios", error));
+      .catch(error => {
+        console.error("Hubo un problema al obtener los usuarios", error);
+        setError(error.response?.data?.error || 'Hubo un problema al obtener los usuario');
+        showError(error.response?.data?.error || "Hubo un problema al obtener los usuario");
+      
+      });
 };
 
 // Eliminar un usuario
 const eliminarUsuario = (id) => {
   axios.delete(`http://localhost:5000/api/usuarios/${id}`)
-      .then(() => actualizarListaUsuarios())
-      .catch(error => setMensaje('Hubo un problema al eliminar el usuario.'));
+      .then(() => {
+        setMensaje('Usuario eliminado con éxito');
+        setError("");
+        hideMessage();
+        actualizarListaUsuarios() 
+      }
+        
+    )
+      .catch(error => {
+        setError(error.response?.data?.error || 'Hubo un problema al eliminar el usuario');
+        showError(error.response?.data?.error || "Hubo un problema al eliminar el usuario");
+      })
 };
 
 // Iniciar la edición de un usuario
@@ -74,6 +107,19 @@ const editarUsuario = (usuario) => {
   setNombre(usuario.nombre);
   setCorreo(usuario.correo);
   setRol(usuario.rol);
+};
+
+const showError = (errorMsg) => {
+  setError(errorMsg);
+  setTimeout(() => {
+    setError("");
+  }, 2000);
+};
+
+const hideMessage = () => {
+  setTimeout(() => {
+    setMensaje("");
+  }, 2000);
 };
 
 return (
@@ -111,7 +157,8 @@ return (
       </form>
 
       {/* Mensaje de éxito o error */}
-      {mensaje && <p>{mensaje}</p>}
+      {mensaje && <div className="message">{mensaje}</div>}
+      {error && <p className="error">{error}</p>}
 
       {/* Tabla de usuarios */}
       <h2>Lista de Usaarios</h2>

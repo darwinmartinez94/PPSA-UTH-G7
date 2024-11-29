@@ -7,7 +7,8 @@ function Productos() {
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [proveedores, setProveedores] = useState([]);
-  const [mensaje, setMensaje] = useState('');
+  const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
   const [mostrarFormularioAgregar, setMostrarFormularioAgregar] = useState(false);
   const [mostrarFormularioEditar, setMostrarFormularioEditar] = useState(false);
   const [productoEditar, setProductoEditar] = useState(null);
@@ -32,7 +33,8 @@ function Productos() {
         setProveedores(proveedoresResponse.data);
       } catch (error) {
         console.error("Hubo un error al obtener los datos:", error);
-        setMensaje("Error al cargar los datos. Inténtelo más tarde.");
+        setError(error.response?.data?.error || 'Error al cargar los datos');
+        showError(error.response?.data?.error || "Error al cargar los datos");
       }
     };
     fetchData();
@@ -60,6 +62,8 @@ function Productos() {
     try {
       await axios.put(`http://localhost:5000/api/productos/${productoEditar._id}`, productoActualizado);
       setMensaje('Producto actualizado con éxito');
+      setError(""); 
+      hideMessage(); 
       setMostrarFormularioEditar(false);
       
       // Actualiza la lista de productos
@@ -67,7 +71,8 @@ function Productos() {
       setProductos(productosResponse.data);
     } catch (error) {
       console.error("Hubo un error al actualizar el producto:", error);
-      setMensaje('Hubo un error al actualizar el producto');
+      setError(error.response?.data?.error || 'Hubo un error al actualizar el producto');
+      showError(error.response?.data?.error || "Hubo un error al actualizar el producto");
     }
   };
 
@@ -78,10 +83,13 @@ function Productos() {
         .then(() => {
           setProductos(productos.filter(producto => producto._id !== id));
           setMensaje('Producto eliminado con éxito');
+          setError(""); 
+          hideMessage(); 
         })
         .catch(error => {
           console.error("Hubo un error al eliminar el producto:", error);
-          setMensaje('Hubo un error al eliminar el producto');
+          setError(error.response?.data?.error || 'Hubo un error al eliminar el producto');
+          showError(error.response?.data?.error || "Hubo un error al eliminar el producto");
         });
     }
   };
@@ -118,6 +126,8 @@ function Productos() {
     try {
       await axios.post('http://localhost:5000/api/productos', nuevoProducto);
       setMensaje('Producto agregado con éxito');
+      setError(""); 
+      hideMessage(); 
       setMostrarFormularioAgregar(false);
 
       // Actualiza la lista de productos
@@ -125,9 +135,25 @@ function Productos() {
       setProductos(productosResponse.data);
     } catch (error) {
       console.error("Hubo un error al agregar el producto:", error);
-      setMensaje('Hubo un error al agregar el producto');
+      setError(error.response?.data?.error || 'Hubo un error al agregar el producto');
+      showError(error.response?.data?.error || "Hubo un error al agregar el producto");
+    
     }
 
+  };
+  
+  
+  const showError = (errorMsg) => {
+    setError(errorMsg);
+    setTimeout(() => {
+      setError("");
+    }, 2000);
+  };
+
+  const hideMessage = () => {
+    setTimeout(() => {
+      setMensaje("");
+    }, 2000);
   };
 
   const handleCheckboxChange = () => {
@@ -136,7 +162,8 @@ function Productos() {
 
   return (
     <div className="container">
-      {mensaje && <p>{mensaje}</p>}
+       {mensaje && <div className="message">{mensaje}</div>}
+       {error && <p className="error">{error}</p>}
 
       {mostrarFormularioAgregar && (
         <form onSubmit={handleAdd} className="form-container">

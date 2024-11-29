@@ -9,20 +9,27 @@ function Transacciones(){
     const [tipo_transaccion, setTipo_Transaccion] = useState('');
     const [producto, setProducto] = useState('');
     const [cantidad, setCantidad] = useState('');
-    const [mensaje, setMensaje] = useState('');
+    const [mensaje, setMensaje] = useState("");
+    const [error, setError] = useState("");
 
     // Obtener lista de transacciones
     useEffect(() => {
         axios.get('http://localhost:5000/api/transacciones')
             .then(response => { setTransacciones(response.data); })
-            .catch(error => { console.error("Error al obtener las transacciones:", error); });
+            .catch(error => { 
+                console.error("Error al obtener las transacciones:", error); 
+                setError(error.response?.data?.error || 'Error al obtener las transacciones');
+                showError(error.response?.data?.error || "Error al obtener las transacciones");
+            });
     }, []);
 
     // Obtener lista de productos al cargar el componente
     useEffect(() => {
         axios.get('http://localhost:5000/api/productos') 
             .then(response => setProductos(response.data))
-            .catch(error => console.error("Error al cargar los productos:", error));
+            .catch(error => 
+                console.error("Error al cargar los productos:", error)
+            );
     }, []);
 
     // Función para agregar nueva transacción
@@ -41,11 +48,16 @@ function Transacciones(){
             setProducto('');
             setCantidad('');
             setMensaje('Transacción agregada con éxito');
+            setError("");
+            hideMessage();
             
             // Recargar las transacciones después de agregar una nueva
             axios.get('http://localhost:5000/api/transacciones')
                 .then(response => { setTransacciones(response.data); })
-                .catch(error => { console.error("Error al obtener las transacciones", error); });
+                .catch(error => { 
+                    console.error("Error al obtener las transacciones", error); 
+                  
+                });
         })
         .catch(error => {
             console.error("Error al agregar la transacción", error);
@@ -57,6 +69,19 @@ function Transacciones(){
             }
         });
     };
+
+    const showError = (errorMsg) => {
+        setError(errorMsg);
+        setTimeout(() => {
+          setError("");
+        }, 2000);
+      };
+    
+      const hideMessage = () => {
+        setTimeout(() => {
+          setMensaje("");
+        }, 2000);
+      };
 
     return (
         <div className="container">
@@ -83,7 +108,8 @@ function Transacciones(){
                 <button type="submit">Registrar Transacción</button>
             </form>
 
-            {mensaje && <p>{mensaje}</p>}
+            {mensaje && <div className="message">{mensaje}</div>}
+            {error && <p className="error">{error}</p>}
 
             <h2>Lista de Transacciones</h2>
             <table className="productos-tabla">
